@@ -1,0 +1,4 @@
+dask
+shapely
+mojimoji
+kanjize
