@@ -36,6 +36,9 @@
 git clone https://github.com/drakase/island_address.git
 cd island_address
 
+# 環境構築
+. ./setup.sh
+
 # 適宜ディレクトリを作成して、入力データを配置します
 # 離島振興対策実施地域データ: data/island_polygon/42_nagasaki/A19-17_42_GML.zip
 # 位置参照情報(街区レベル): data/geocoding/42_nagasaki/42000-21.0a.zip
