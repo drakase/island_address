@@ -116,11 +116,14 @@ def check_island(island_latlon_dicts, geocoding_block_dicts, geocoding_village_d
         )
     ]
     logger.info(f"離島候補_ジオコーディングデータ数: {len(filtered_geocoding_dicts)}")
-    geocoding_dict_db = db.from_sequence(filtered_geocoding_dicts, npartitions=5000)
     def udf_check_island(geocoding_dict):
         checked_island_dict = {}
         point = geometry.Point(geocoding_dict["coordinate"][0], geocoding_dict["coordinate"][1])
-        for island_latlon_dict in island_latlon_dicts:
+        filtered_island_latlon_dicts = [
+            island_latlon_dict for island_latlon_dict in island_latlon_dicts
+            if island_latlon_dict["市区町村名"] == geocoding_dict["市区町村名"]
+        ]
+        for island_latlon_dict in filtered_island_latlon_dicts:
             polygon = geometry.Polygon(island_latlon_dict["coordinates"])
             if polygon.contains(point):
                 checked_island_dict["レベル"] = fillna(geocoding_dict["レベル"])
@@ -145,6 +148,7 @@ def check_island(island_latlon_dicts, geocoding_block_dicts, geocoding_village_d
                 )
                 break
         return checked_island_dict
+    geocoding_dict_db = db.from_sequence(filtered_geocoding_dicts, npartitions=5000)
     with ProgressBar():
         _checked_island_dicts = geocoding_dict_db.map(udf_check_island).compute()
     checked_island_dicts = [e for e in _checked_island_dicts if len(e) > 0]
