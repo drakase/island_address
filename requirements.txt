@@ -1,4 +1,3 @@
-dask
-shapely
-mojimoji
-kanjize
+openpyxl
+pandas
+tqdm
