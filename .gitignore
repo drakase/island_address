@@ -1,2 +1,4 @@
 .DS_Store
-/data/
+/island_polygon/
+/geocoding/
+/island_address/
