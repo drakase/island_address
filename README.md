@@ -1,7 +1,7 @@
 # 離島住所生成ツール
 
 ## 概要
-* 国土交通省が提供する離島振興対策実施地域データと位置参照情報を利用して、都道府県単位で離島住所(都道府県 + 市町村名 + 丁目)一覧を生成します。
+* 国土交通省が提供する離島振興対策実施地域データと位置参照情報を利用して、都道府県単位で離島住所(都道府県 + 市町村名 + 丁目)一覧を生成します
 
 ## 入出力データ
 ### 入力データ
@@ -36,20 +36,20 @@
 git clone https://github.com/drakase/island_address.git
 cd island_address
 
-# 環境構築
+# 【初回のみ】実行環境を構築します
 . ./setup.sh
 
 # 適宜ディレクトリを作成して、入力データを配置します
-# 離島振興対策実施地域データ: data/island_polygon/42_nagasaki/A19-17_42_GML.zip
-# 位置参照情報(街区レベル): data/geocoding/42_nagasaki/42000-21.0a.zip
-# 位置参照情報(大字・町丁目レベル): data/geocoding/42_nagasaki/42000-16.0b.zip
+# 離島振興対策実施地域データ: island_polygon/A19-17_42_GML.zip
+# 位置参照情報(街区レベル): geocoding/42000-21.0a.zip
+# 位置参照情報(大字・町丁目レベル): geocoding/42000-16.0b.zip
 
 # 都道府県単位で離島住所一覧を生成します
 . ./make_island_address.sh \
-    data/island_polygon/42_nagasaki/A19-17_42_GML.zip \
-    data/geocoding/42_nagasaki/42000-21.0a.zip \
-    data/geocoding/42_nagasaki/42000-16.0b.zip \
-    processed/42_nagasaki/island_address.csv
+    island_polygon/A19-17_42_GML.zip \
+    geocoding/42000-21.0a.zip \
+    geocoding/42000-16.0b.zip \
+    island_address/42_nagasaki.csv
 
-# この例では、processed/42_nagasaki/island_address.csv に長崎県の離島住所一覧が保存されます
+# この例では、island_address/42_nagasaki.csv に長崎県の離島住所一覧が保存されます
 ```

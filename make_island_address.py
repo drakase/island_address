@@ -111,8 +111,8 @@ def check_island(island_latlon_dicts, geocoding_block_dicts, geocoding_village_d
         geocoding_dict
         for geocoding_dict in geocoding_dicts
         if geocoding_dict["市区町村名"] in set(
-            island_latlon_dict["市区町村名"]
-            for island_latlon_dict in island_latlon_dicts
+            [island_latlon_dict["市区町村名"] for island_latlon_dict in island_latlon_dicts]
+            + [island_latlon_dict["原典市区町村名"] for island_latlon_dict in island_latlon_dicts]
         )
     ]
     logger.info(f"離島候補_ジオコーディングデータ数: {len(filtered_geocoding_dicts)}")
@@ -121,7 +121,7 @@ def check_island(island_latlon_dicts, geocoding_block_dicts, geocoding_village_d
         point = geometry.Point(geocoding_dict["coordinate"][0], geocoding_dict["coordinate"][1])
         filtered_island_latlon_dicts = [
             island_latlon_dict for island_latlon_dict in island_latlon_dicts
-            if island_latlon_dict["市区町村名"] == geocoding_dict["市区町村名"]
+            if island_latlon_dict["市区町村名"] == geocoding_dict["市区町村名"] or island_latlon_dict["原典市区町村名"] == geocoding_dict["市区町村名"]
         ]
         for island_latlon_dict in filtered_island_latlon_dicts:
             polygon = geometry.Polygon(island_latlon_dict["coordinates"])
