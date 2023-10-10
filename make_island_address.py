@@ -55,8 +55,12 @@ def load_island_polygon():
 
 def load_geocoding_block():
     file = unpack(file_path=args.geocoding_block, file_name="*.csv")[0]
-    with open(file, encoding="shift_jis", mode="r") as f:
-        geocoding_block_raw_dicts = [d for d in csv.DictReader(f)]
+    try:
+        with open(file, encoding="shift_jis", mode="r") as f:
+            geocoding_block_raw_dicts = [d for d in csv.DictReader(f)]
+    except UnicodeDecodeError:
+        with open(file, encoding="cp932", mode="r") as f:
+            geocoding_block_raw_dicts = [d for d in csv.DictReader(f)]
     geocoding_block_dicts = []
     for d in geocoding_block_raw_dicts:
         geocoding_block_dict = {
@@ -73,8 +77,12 @@ def load_geocoding_block():
 
 def load_geocoding_village():
     file = unpack(file_path=args.geocoding_village, file_name="*.csv")[0]
-    with open(file, encoding="shift_jis", mode="r") as f:
-        geocoding_village_raw_dicts = [d for d in csv.DictReader(f)]
+    try:
+        with open(file, encoding="shift_jis", mode="r") as f:
+            geocoding_village_raw_dicts = [d for d in csv.DictReader(f)]
+    except UnicodeDecodeError:
+        with open(file, encoding="cp932", mode="r") as f:
+            geocoding_village_raw_dicts = [d for d in csv.DictReader(f)]
     geocoding_village_dicts = []
     for d in geocoding_village_raw_dicts:
         geocoding_village_dict = {
@@ -174,5 +182,5 @@ def main():
     checked_island_dicts = check_island(island_latlon_dicts, geocoding_block_dicts, geocoding_village_dicts)
     save(checked_island_dicts)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

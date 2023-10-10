@@ -7,6 +7,7 @@
 ### 入力データ
 * [離島振興対策実施地域データ](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-A19-v4_0.html)
   * 離島の緯度経度を得るために必要です
+  * __GeoJSON形式(平成29年)のデータのみ対応しています__
   * 例えば、長崎県の離島住所一覧を生成する場合は以下のデータをダウンロードします
     * A19-17_42_GML.zip
 * [位置参照情報](https://nlftp.mlit.go.jp/cgi-bin/isj/dls/_choose_method.cgi)
@@ -52,4 +53,29 @@ cd island_address
     island_address/42_nagasaki.csv
 
 # この例では、island_address/42_nagasaki.csv に長崎県の離島住所一覧が保存されます
+```
+### 一括実行する場合
+```bash
+# 適宜ディレクトリを作成して、全ての都道府県のデータを配置します
+# 離島振興対策実施地域データ: island_polygon/*_GML.zip
+# 位置参照情報(街区レベル): geocoding/*.0a.zip
+# 位置参照情報(大字・町丁目レベル): geocoding/*.0b.zip
+
+# 離島振興対策実施地域データが存在する全ての都道府県の離島住所一覧を生成します
+for pref_no in $(ls island_polygon | grep .zip | sed -E "s/^.+_(.*)_GML.zip/\1/"); do
+  island_polygon=`ls island_polygon | grep -E "^.+_${pref_no}_GML\.zip$"`
+  geocoding_block=`ls geocoding | grep -E "^${pref_no}000-.+0a\.zip$"`
+  geocoding_village=`ls geocoding | grep -E "^${pref_no}000-.+0b\.zip$"`
+  out_file_name=${pref_no}.csv
+  if [ ! -e island_address/$out_file_name ]; then
+    . ./make_island_address.sh \
+        island_polygon/$island_polygon \
+        geocoding/$geocoding_block \
+        geocoding/$geocoding_village \
+        island_address/$out_file_name
+  fi
+done
+
+# 全ての都道府県の離島住所一覧を結合して1つのCSVファイル(all.csv)を生成します
+awk 'FNR!=1||NR==1' island_address/??.csv > island_address/all.csv
 ```
